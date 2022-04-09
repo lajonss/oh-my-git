@@ -80,6 +80,7 @@ func type_set(new_type):
 			$Sprite.texture = preload("res://nodes/tree.svg")
 		"commit":
 			$Sprite.texture = preload("res://nodes/commit.svg")
+			$Sprite.modulate = _gen_color($ID.text)
 			game.notify("You can drag these around with your mouse!", self, "drag-nodes")
 		"tag":
 			$Sprite.texture = preload("res://nodes/blob.svg")
@@ -133,3 +134,23 @@ func _input(event):
 			input.caret_position = input.text.length()
 	if event.is_action_released("click"):
 		held = false
+
+func _gen_color(text):
+	return Color(
+		_gen_color_2(text.substr(0,2)),
+		_gen_color_2(text.substr(2,2)),
+		_gen_color_2(text.substr(4,2))
+	)
+
+func _gen_color_2(text):
+	return (_gen_color_1(text[0]) + _gen_color_1(text[1])) * 0.4 + 0.2
+	
+func _gen_color_1(ch):
+	if ch.is_valid_integer():
+		return 0.16 * int(ch)
+	if ch.to_lower() == ch:
+		return 0.16 + 0.42 * _ord_rel(ch, "a")
+	return min(0.16 + 0.42 + 0.42 * _ord_rel(ch, "A"), 1)
+
+func _ord_rel(ch, rel):
+	return (ord(ch) - ord(rel)) / 25
