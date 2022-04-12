@@ -1,0 +1,47 @@
+title = The remote history was overwritten
+cards = fetch rebase-interactive push
+
+[description]
+
+What happened:
+1. somebody pushed a bad commit to remote
+2. you pulled these changes
+3. you've commited some of your changes
+4. bad commits were removed from remote repository
+5. other changes were pushed to remote repository
+
+What you want to do:
+push your changes to remote repository
+
+[setup]
+
+echo "beginning" > beginning
+git add .
+git commit -m beginning
+
+git push team main
+git branch -u team/main main
+
+echo "something bad from remote" > something_bad
+git add .
+git commit -m "something bad from remote"
+
+echo "something good from yourself" > something_good_from_yourself
+git add .
+git commit -m "something good from yourself"
+
+[setup team]
+
+git checkout main
+echo "something good from remote" > something_good_from_remote
+git add .
+git commit -m "something good from remote"
+
+[win team]
+
+# The team's main branch doesn't contain the bad thing.
+! { git log main | grep -q "something bad"; }
+# The good thing from remote is in team's repository
+{ git log main | grep -q "something good from remote"; }
+# The good thing from yourself is in team's repository
+{ git log main | grep -q "something good from yourself"; }

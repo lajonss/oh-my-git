@@ -1,0 +1,53 @@
+title = Rebasing after a merge
+cards = rebase push
+
+[description]
+
+What happened:
+1. you've committed something locally
+2. something was committed to remote repository
+3. you've merged the remote changes
+4. you've committed something locally
+
+What you want to do:
+1. reorder your changes and get rid of the merge commit
+2. push your changes to remote
+
+[setup]
+
+echo "beginning" > beginning
+git add .
+git commit -m beginning
+
+echo "a change from remote" > a_change_from_remote
+git add .
+git commit -m "a change from remote"
+
+git push team main
+git branch -u team/main main
+
+git reset --hard HEAD~1
+
+echo "first change from you" > first_change_from_you
+git add .
+git commit -m "first change from you"
+
+git checkout main
+git merge --no-edit team/main
+
+echo "second change from you" > second_change_from_you
+git add .
+git commit -m "second change from you"
+
+[setup team]
+
+git checkout main
+
+[win team]
+
+# The team's main branch doesn't contain the merge commit.
+! { git log main | grep -q "merge"; }
+# Your first change is in team's repository
+{ git log main | grep -q "first change from you"; }
+# Your second change is in team's repository
+{ git log main | grep -q "second change from you"; }
