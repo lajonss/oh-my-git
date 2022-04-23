@@ -1,9 +1,7 @@
-title = Merge revert apocalypse
-cards = checkout revert merge push
+title = Merge revert apocalypse 2
+cards = checkout reset-hard merge rebase push
 
 [description]
-
-WARNING: This is bad. Don't try this at home pls.
 
 What happened:
 1. you've committed something
@@ -12,9 +10,11 @@ What happened:
 4. you've added some more changes
 5. you try to push the changes to remote branch, but something's wrong
 
-What you want to do - revert the merge revert:
-- either by actual reverting
-- or overwriting remote branch history
+What you want to do - get rid of the reverts.
+
+You cannot push your changes after overwriting your history.
+To force your history on origin use
+    git push --force
 
 [setup]
 
@@ -59,3 +59,7 @@ test "$(git show main:first_change_from_you)" = "first change from you"
 test "$(git show main:second_change_from_you)" = "second change from you"
 # The origin's main branch contains a change from remote
 test "$(git show main:a_change_from_remote)" = "a change from remote"
+# The origin's main branch contains no reverts
+! { git log main | grep -q "Revert"; }
+# The origin's main branch contains no merge commits
+! { git log main | grep -q "Merge"; }

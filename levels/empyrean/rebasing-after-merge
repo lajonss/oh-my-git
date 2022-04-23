@@ -23,8 +23,8 @@ echo "a change from remote" > a_change_from_remote
 git add .
 git commit -m "a change from remote"
 
-git push team main
-git branch -u team/main main
+git push origin main
+git branch -u origin/main main
 
 git reset --hard HEAD~1
 
@@ -33,21 +33,21 @@ git add .
 git commit -m "first change from you"
 
 git checkout main
-git merge --no-edit team/main
+git merge --no-edit origin/main
 
 echo "second change from you" > second_change_from_you
 git add .
 git commit -m "second change from you"
 
-[setup team]
+[setup origin]
 
 git checkout main
 
-[win team]
+[win origin]
 
-# The team's main branch doesn't contain the merge commit.
+# The origin's main branch doesn't contain the merge commit.
 ! { git log main | grep -q "merge"; }
-# Your first change is in team's repository
+# Your first change is in origin's repository
 { git log main | grep -q "first change from you"; }
-# Your second change is in team's repository
+# Your second change is in origin's repository
 { git log main | grep -q "second change from you"; }
